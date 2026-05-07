@@ -2,11 +2,12 @@ from pydantic import BaseModel
 from typing import Optional, Literal
 from datetime import date
 
-TIPOS_ACTIVO = Literal["laptop", "pc", "workstation", "monitor", "celular", "nas", "periferico", "otro"]
-ESTADOS_ACTIVO = Literal["disponible", "asignado", "mantenimiento", "baja", "almacen"]
+TIPOS_ACTIVO = Literal["laptop", "pc", "workstation", "monitor", "nas", "celular", "impresora", "otro"]
+ESTADOS_ACTIVO = Literal["operativo", "mantenimiento", "reparar", "dañado", "descartado", "prestado", "retirado"]
 
 
 class EquipoDetalleCreate(BaseModel):
+    hostname: Optional[str] = None
     procesador: Optional[str] = None
     ram_gb: Optional[int] = None
     almacenamiento: Optional[str] = None
@@ -43,13 +44,16 @@ class NasDetalleRead(NasDetalleCreate):
 
 
 class ActivoCreate(BaseModel):
+    codigo_patrimonial: Optional[str] = None
     tipo: TIPOS_ACTIVO
     nombre: Optional[str] = None
     marca: Optional[str] = None
     modelo: Optional[str] = None
     serial: Optional[str] = None
-    estado: ESTADOS_ACTIVO = "disponible"
+    estado: ESTADOS_ACTIVO = "operativo"
+    ubicacion: Optional[str] = None
     fecha_compra: Optional[date] = None
+    fecha_garantia: Optional[date] = None
     notas: Optional[str] = None
     equipo_detalle: Optional[EquipoDetalleCreate] = None
     periferico_detalle: Optional[PerifericoDetalleCreate] = None
@@ -57,26 +61,33 @@ class ActivoCreate(BaseModel):
 
 
 class ActivoUpdate(BaseModel):
+    codigo_patrimonial: Optional[str] = None
     tipo: Optional[TIPOS_ACTIVO] = None
     nombre: Optional[str] = None
     marca: Optional[str] = None
     modelo: Optional[str] = None
     serial: Optional[str] = None
     estado: Optional[ESTADOS_ACTIVO] = None
+    ubicacion: Optional[str] = None
     fecha_compra: Optional[date] = None
+    fecha_garantia: Optional[date] = None
     notas: Optional[str] = None
     is_active: Optional[bool] = None
+    equipo_detalle: Optional[EquipoDetalleCreate] = None
 
 
 class ActivoRead(BaseModel):
     id: int
+    codigo_patrimonial: Optional[str]
     tipo: str
     nombre: Optional[str]
     marca: Optional[str]
     modelo: Optional[str]
     serial: Optional[str]
     estado: str
+    ubicacion: Optional[str]
     fecha_compra: Optional[date]
+    fecha_garantia: Optional[date]
     notas: Optional[str]
     is_active: bool
     equipo_detalle: Optional[EquipoDetalleRead] = None

@@ -33,11 +33,11 @@ def create_assignment(data: AsignacionCreate, db: Session = Depends(get_db), _=D
     activo = db.query(Activo).filter(Activo.id == data.activo_id, Activo.is_active == True).first()
     if not activo:
         raise HTTPException(status_code=404, detail="Activo no encontrado")
-    if activo.estado == "asignado":
-        raise HTTPException(status_code=400, detail="El activo ya está asignado")
+    if activo.estado == "prestado":
+        raise HTTPException(status_code=400, detail="El activo ya está prestado/asignado")
 
     asignacion = Asignacion(**data.model_dump())
-    activo.estado = "asignado"
+    activo.estado = "prestado"
     db.add(asignacion)
     db.commit()
     db.refresh(asignacion)
@@ -57,7 +57,7 @@ def return_assignment(
     asignacion.fecha_devolucion = data.fecha_devolucion
     asignacion.notas = data.notas or asignacion.notas
     asignacion.is_active = False
-    asignacion.activo.estado = "disponible"
+    asignacion.activo.estado = "operativo"
     db.commit()
     db.refresh(asignacion)
     return asignacion

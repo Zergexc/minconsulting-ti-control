@@ -11,8 +11,8 @@ router = APIRouter(prefix="/dashboard", tags=["dashboard"])
 @router.get("/stats")
 def get_stats(db: Session = Depends(get_db), _=Depends(get_current_user)):
     total_activos = db.query(Activo).filter(Activo.is_active == True).count()
-    activos_disponibles = db.query(Activo).filter(Activo.is_active == True, Activo.estado == "disponible").count()
-    activos_asignados = db.query(Activo).filter(Activo.is_active == True, Activo.estado == "asignado").count()
+    activos_operativos = db.query(Activo).filter(Activo.is_active == True, Activo.estado == "operativo").count()
+    activos_prestados = db.query(Activo).filter(Activo.is_active == True, Activo.estado == "prestado").count()
     activos_mantenimiento = db.query(Activo).filter(Activo.is_active == True, Activo.estado == "mantenimiento").count()
     total_empleados = db.query(Employee).filter(Employee.is_active == True).count()
     asignaciones_activas = db.query(Asignacion).filter(Asignacion.is_active == True).count()
@@ -23,8 +23,8 @@ def get_stats(db: Session = Depends(get_db), _=Depends(get_current_user)):
 
     return {
         "total_activos": total_activos,
-        "activos_disponibles": activos_disponibles,
-        "activos_asignados": activos_asignados,
+        "activos_operativos": activos_operativos,
+        "activos_prestados": activos_prestados,
         "activos_mantenimiento": activos_mantenimiento,
         "total_empleados": total_empleados,
         "asignaciones_activas": asignaciones_activas,

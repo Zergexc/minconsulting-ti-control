@@ -2,8 +2,8 @@ import api from "./client";
 
 export interface DashboardStats {
   total_activos: number;
-  activos_disponibles: number;
-  activos_asignados: number;
+  activos_operativos: number;
+  activos_prestados: number;
   activos_mantenimiento: number;
   total_empleados: number;
   asignaciones_activas: number;

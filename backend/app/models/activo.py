@@ -3,21 +3,24 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from app.database import Base
 
-# Valores válidos para tipo: laptop, pc, workstation, monitor, celular, nas, periferico, otro
-# Valores válidos para estado: disponible, asignado, mantenimiento, baja, almacen
+# Tipos: laptop, pc, workstation, monitor, nas, celular, impresora, otro
+# Estados: operativo, mantenimiento, reparar, dañado, descartado, prestado, retirado
 
 
 class Activo(Base):
     __tablename__ = "activos"
 
     id = Column(Integer, primary_key=True, index=True)
+    codigo_patrimonial = Column(String(100), unique=True, index=True, nullable=True)
     tipo = Column(String(20), nullable=False, index=True)
     nombre = Column(String(200), nullable=True)
     marca = Column(String(100), nullable=True)
     modelo = Column(String(100), nullable=True)
     serial = Column(String(100), unique=True, index=True, nullable=True)
-    estado = Column(String(20), default="disponible", nullable=False, index=True)
+    estado = Column(String(20), default="operativo", nullable=False, index=True)
+    ubicacion = Column(String(200), nullable=True)
     fecha_compra = Column(Date, nullable=True)
+    fecha_garantia = Column(Date, nullable=True)
     notas = Column(Text, nullable=True)
     is_active = Column(Boolean, default=True)
     created_at = Column(DateTime, server_default=func.now())
@@ -31,12 +34,13 @@ class Activo(Base):
 
 
 class EquipoDetalle(Base):
-    """Detalle para laptops, PCs y workstations."""
+    """Detalle técnico para laptops, PCs y workstations."""
 
     __tablename__ = "equipos_detalle"
 
     id = Column(Integer, primary_key=True, index=True)
     activo_id = Column(Integer, ForeignKey("activos.id"), unique=True, nullable=False)
+    hostname = Column(String(100), nullable=True)
     procesador = Column(String(200), nullable=True)
     ram_gb = Column(Integer, nullable=True)
     almacenamiento = Column(String(200), nullable=True)
@@ -48,7 +52,7 @@ class EquipoDetalle(Base):
 
 
 class PerifericoDetalle(Base):
-    """Detalle para periféricos (teclado, mouse, impresora, etc.)."""
+    """Detalle para periféricos."""
 
     __tablename__ = "perifericos_detalle"
 

@@ -57,14 +57,14 @@ export default function Dashboard() {
           color="bg-blue-50"
         />
         <StatCard
-          label="Disponibles"
-          value={data.activos_disponibles}
+          label="Operativos"
+          value={data.activos_operativos}
           icon={<Monitor size={22} className="text-green-600" />}
           color="bg-green-50"
         />
         <StatCard
-          label="Asignados"
-          value={data.activos_asignados}
+          label="Prestados"
+          value={data.activos_prestados}
           icon={<ClipboardList size={22} className="text-orange-600" />}
           color="bg-orange-50"
         />
@@ -95,7 +95,7 @@ export default function Dashboard() {
             {Object.entries(data.activos_por_tipo).map(([tipo, count]) => (
               <span
                 key={tipo}
-                className="px-3 py-1.5 bg-gray-100 rounded-full text-sm text-gray-700"
+                className="px-3 py-1.5 bg-gray-100 rounded-full text-sm text-gray-700 capitalize"
               >
                 {tipo}: <strong>{count}</strong>
               </span>
