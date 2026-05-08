@@ -48,7 +48,7 @@ El backend ya está completo. Solo falta la UI.
 ### Fase 1 — Completar módulos base
 
 1. ~~**Asignaciones UI**~~ ✅ Completado
-2. **Mantenimientos UI** — tabla + modal con: activo, fecha, tipo, descripción, técnico, costo
+2. ~~**Mantenimientos UI**~~ ✅ Completado (sesión 3) — tabla + modal con: activo, fecha, tipo, descripción. Técnico y costo no se registran (mantenimiento interno del área TI).
 3. **Gestión de usuarios UI** — solo visible para admin, tabla + modal para crear/editar usuarios del sistema
 
 ### Fase 2 — Extensión de datos
@@ -101,6 +101,7 @@ El backend ya está completo. Solo falta la UI.
 - Empleados y activos dados de baja no tienen UI para reactivarlos (el backend lo soporta vía PATCH `is_active: true`)
 - El formulario de activos no edita `perifericos_detalle` ni `nas_detalle` desde la UI
 - La búsqueda en activos no cubre el campo `hostname` de `equipos_detalle`
+- **Mantenimientos — técnico automático:** añadir campo `realizado_por_id` (FK a `users`) al modelo `Mantenimiento` para registrar automáticamente el usuario del sistema que creó el registro, sin necesidad de texto manual. Requiere migración de BD (Alembic) y exponer el `user_id` en el endpoint de creación.
 
 ---
 

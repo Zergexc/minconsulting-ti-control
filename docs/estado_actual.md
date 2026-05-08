@@ -1,6 +1,6 @@
 # Estado Actual — Sistema Gestión TI Minconsulting
 
-> Última actualización: 2026-05-07 (sesión 2)
+> Última actualización: 2026-05-07 (sesión 3)
 
 ---
 
@@ -13,7 +13,7 @@
 | Empleados      | ✅ completo | ✅ CRUD completo | Estable      |
 | Activos        | ✅ completo | ✅ CRUD completo | Estable      |
 | Asignaciones   | ✅ completo | ✅ CRUD completo | Estable        |
-| Mantenimientos | ✅ backend  | 🔧 stub          | Backend listo  |
+| Mantenimientos | ✅ completo | ✅ CRUD completo | Estable        |
 | Usuarios       | ✅ backend  | ❌ pendiente     | Sin UI         |
 
 ---
@@ -94,6 +94,22 @@ PATCH  /api/v1/maintenance/{id}    Editar mantenimiento            [tecnico, adm
 DELETE /api/v1/maintenance/{id}    Eliminar mantenimiento          [tecnico, admin]
 ```
 
+**Campos gestionados por el frontend:** `activo_id`, `fecha`, `tipo_mantenimiento`, `descripcion`.
+
+**Campos del backend no expuestos en UI:** `tecnico` y `costo` existen en el modelo pero no se registran desde la interfaz (los mantenimientos son internos del área TI). El backend los acepta si se envían, pero el frontend no los envía ni muestra.
+
+**Decisión de diseño (sesión 3):** Los mantenimientos los realiza el área TI internamente, por lo que el técnico y el costo no son datos relevantes en Fase 1. Mejora futura: registrar automáticamente el usuario del sistema que creó el mantenimiento mediante un campo `realizado_por_id` (FK a `users`), eliminando la necesidad de ingresar técnico manualmente.
+
+**Tipos de mantenimiento válidos:** `preventivo` | `correctivo` | `limpieza` | `actualizacion` | `otro`
+
+**Flujo de registro:**
+1. Dropdown de activos (todos los activos activos, cualquier estado).
+2. Selección de fecha (hoy por defecto), tipo y descripción opcional.
+3. Checkbox opcional: "Cambiar estado del activo a En mantenimiento" — si se marca, el frontend llama adicionalmente a `PATCH /activos/{id}` con `{ estado: "mantenimiento" }`.
+4. Al editar o eliminar el mantenimiento, el estado del activo **no se modifica automáticamente** — el usuario lo gestiona manualmente desde Activos.
+
+**Nota sobre DELETE:** Es hard delete (eliminación permanente). A diferencia de activos y empleados, los mantenimientos no tienen soft delete ni historial de eliminados.
+
 ### Dashboard
 ```
 GET    /api/v1/dashboard/stats     Estadísticas generales          [todos]
@@ -133,6 +149,15 @@ GET    /api/v1/dashboard/stats     Estadísticas generales          [todos]
 | `admin`       | CRUD completo + gestión de usuarios |
 | `tecnico`     | CRUD activos, empleados, asignaciones, mantenimientos |
 | `solo_lectura`| Solo GET en todos los endpoints |
+
+---
+
+## Archivos frontend — Mantenimientos
+
+| Archivo | Descripción |
+|---------|-------------|
+| `frontend/src/api/maintenance.ts` | `TIPOS_MANTENIMIENTO` con colores, tipos `Mantenimiento` / `MantenimientoCreate` / `MantenimientoUpdate`, funciones `fetchMantenimientos`, `createMantenimiento`, `updateMantenimiento`, `deleteMantenimiento` |
+| `frontend/src/pages/Mantenimientos/MantenimientosPage.tsx` | Tabla con columnas Activo / Fecha / Tipo (badge) / Descripción / Acciones; filtros por activo (server-side) y texto (client-side); modal crear con checkbox de estado; modal editar; modal eliminar con advertencia de borrado permanente |
 
 ---
 

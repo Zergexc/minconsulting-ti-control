@@ -104,7 +104,7 @@ El frontend hace proxy automático de `/api/*` hacia `localhost:8000` (configura
 | Empleados      | ✅ CRUD completo |
 | Activos        | ✅ CRUD completo |
 | Asignaciones   | ✅ CRUD completo |
-| Mantenimientos | ✅ Backend / 🔧 UI pendiente |
+| Mantenimientos | ✅ CRUD completo |
 
 ---
 
