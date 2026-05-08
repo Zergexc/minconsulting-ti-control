@@ -1,6 +1,6 @@
 # Estado Actual — Sistema Gestión TI Minconsulting
 
-> Última actualización: 2026-05-07
+> Última actualización: 2026-05-07 (sesión 2)
 
 ---
 
@@ -12,7 +12,7 @@
 | Dashboard      | ✅ completo | ✅ completo  | Estable        |
 | Empleados      | ✅ completo | ✅ CRUD completo | Estable      |
 | Activos        | ✅ completo | ✅ CRUD completo | Estable      |
-| Asignaciones   | ✅ backend  | 🔧 stub          | Backend listo  |
+| Asignaciones   | ✅ completo | ✅ CRUD completo | Estable        |
 | Mantenimientos | ✅ backend  | 🔧 stub          | Backend listo  |
 | Usuarios       | ✅ backend  | ❌ pendiente     | Sin UI         |
 
@@ -63,6 +63,28 @@ POST   /api/v1/assignments/                    Crear asignación    [tecnico, ad
 POST   /api/v1/assignments/{id}/devolucion     Registrar devolución [tecnico, admin]
 ```
 
+**Flujo de asignación:**
+1. El frontend solicita `GET /activos/?estado=operativo` para poblar el dropdown (solo al abrir el modal).
+2. El usuario selecciona activo + empleado + fecha de asignación + notas opcionales.
+3. `POST /assignments/` valida que el activo no esté en estado `prestado` y lo cambia a ese estado.
+4. La tabla de asignaciones activas (`activas=true`) se refresca automáticamente.
+5. El activo desaparece del dropdown de activos disponibles.
+
+**Flujo de devolución:**
+1. El usuario hace clic en "Devolver" en la fila de la asignación activa.
+2. El modal muestra el activo, el empleado asignado y la fecha de asignación como contexto.
+3. El usuario confirma o ajusta la fecha de devolución.
+4. `POST /assignments/{id}/devolucion` marca `is_active = false` y cambia el estado del activo a `operativo`.
+5. La fila desaparece de la tabla de activas y aparece en el historial (`activas=false`).
+
+**Criterios de prueba verificados (2026-05-07):**
+- Asignación crea correctamente la fila y cambia el estado del activo a `prestado`.
+- El activo asignado no aparece en el dropdown de nueva asignación.
+- La devolución cambia el estado del activo a `operativo` y mueve la fila al historial.
+- El toggle "Ver historial" muestra asignaciones devueltas con su fecha de devolución.
+- El filtro de texto funciona sobre nombre de activo y nombre de empleado.
+- Los errores del backend (`400 — ya prestado`, `404 — ya devuelta`) se muestran en el modal.
+
 ### Mantenimientos
 ```
 GET    /api/v1/maintenance/        Lista mantenimientos            [todos]
@@ -111,6 +133,15 @@ GET    /api/v1/dashboard/stats     Estadísticas generales          [todos]
 | `admin`       | CRUD completo + gestión de usuarios |
 | `tecnico`     | CRUD activos, empleados, asignaciones, mantenimientos |
 | `solo_lectura`| Solo GET en todos los endpoints |
+
+---
+
+## Archivos frontend — Asignaciones
+
+| Archivo | Descripción |
+|---------|-------------|
+| `frontend/src/api/assignments.ts` | Tipos (`Asignacion`, `AsignacionCreate`, `AsignacionDevolucion`) y funciones HTTP (`fetchAsignaciones`, `createAsignacion`, `registrarDevolucion`) |
+| `frontend/src/pages/Asignaciones/AsignacionesPage.tsx` | Página completa: tabla con toggle historial, filtro de texto, modal nueva asignación, modal devolución con fecha editable |
 
 ---
 

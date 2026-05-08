@@ -4,29 +4,50 @@
 
 ---
 
-## Próximo módulo recomendado: Asignaciones
+## ✅ Asignaciones — completado (2026-05-07)
+
+Módulo totalmente funcional. Backend y frontend implementados y verificados.
+
+**Lo que se implementó:**
+- `frontend/src/api/assignments.ts` — cliente HTTP con tipos TypeScript
+- `frontend/src/pages/Asignaciones/AsignacionesPage.tsx` — página completa
+
+**Funcionalidades verificadas:**
+- Tabla de asignaciones activas con activo, empleado, fechas y notas
+- Modal para crear asignación con dropdown de activos operativos y dropdown de empleados
+- Fecha de asignación con valor por defecto editable (hoy)
+- Botón "Devolver" por fila con modal de confirmación y campo de fecha de devolución
+- Toggle para ver historial de asignaciones devueltas
+- Filtro de texto sobre activo y empleado (client-side)
+- Refresco automático de tabla, dropdown de activos y dashboard tras crear o devolver
+- Mensajes de error del backend mostrados en el modal
+
+---
+
+## Próximo módulo recomendado: Mantenimientos
 
 El backend ya está completo. Solo falta la UI.
 
-**Por qué primero asignaciones:**
-- Conecta los dos módulos ya funcionales (Activos y Empleados)
-- Es el flujo más consultado en el día a día de TI
-- Permite validar el estado `prestado` del activo al asignarlo
+**Por qué mantenimientos ahora:**
+- Completa el ciclo operativo de un activo (asignación → mantenimiento → devolución)
+- El flujo de registro de mantenimiento es el más frecuente después de asignaciones
+- El backend ya responde todo en `GET /api/v1/maintenance/` y soporta PATCH y DELETE
 
-**Qué necesita la pantalla de Asignaciones:**
-- Tabla de asignaciones activas con: activo, empleado, fecha, estado
-- Modal para crear asignación: seleccionar activo (dropdown filtrado por estado=operativo) + seleccionar empleado + fecha
-- Botón "Registrar devolución" por fila
-- Filtro por empleado o por activo
-- El backend ya responde todo en `GET /api/v1/assignments/`
+**Qué necesita la pantalla de Mantenimientos:**
+- Tabla de mantenimientos con: activo, fecha, tipo, descripción, técnico, costo
+- Modal para registrar mantenimiento: dropdown de activos + campos de detalle
+- Botón editar por fila (PATCH)
+- Botón eliminar por fila con confirmación
+- Filtro por activo (`?activo_id=`)
+- El estado del activo puede pasar a `mantenimiento` al registrar (decisión de UX a tomar)
 
 ---
 
 ## Orden sugerido de desarrollo
 
-### Fase 1 — Completar módulos base (próximas sesiones)
+### Fase 1 — Completar módulos base
 
-1. **Asignaciones UI** — pantalla funcional con crear y devolver
+1. ~~**Asignaciones UI**~~ ✅ Completado
 2. **Mantenimientos UI** — tabla + modal con: activo, fecha, tipo, descripción, técnico, costo
 3. **Gestión de usuarios UI** — solo visible para admin, tabla + modal para crear/editar usuarios del sistema
 
